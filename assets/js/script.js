@@ -32,6 +32,11 @@ function displayWeather(cityName) {
     })
     .then(function(forecastData) {
         console.log(forecastData)
+        // grab every 12pm for each day for 5 days
+        var forecastArray = forecastData.list
+        for (let i = 4; i < forecastArray.length; i=i+8) {  
+            console.log(forecastArray[i]) 
+        }
     })
 }
 
