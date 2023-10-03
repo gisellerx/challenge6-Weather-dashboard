@@ -23,6 +23,16 @@ function displayWeather(cityName) {
     .then(function(currentData) {
         console.log(currentData)
     })
+
+    var forecastUrl = "https://api.openweathermap.org/data/2.5/forecast?q="+cityName+"&appid="+apiKey+"&units=imperial"
+
+    fetch(forecastUrl)
+    .then(function(response) {
+        return response.json()
+    })
+    .then(function(forecastData) {
+        console.log(forecastData)
+    })
 }
 
 searchBtn.addEventListener("click", searchCity)
