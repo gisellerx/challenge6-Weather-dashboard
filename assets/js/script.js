@@ -6,14 +6,29 @@ var humidityEl=document.getElementById("humidity")
 var searchBtn=document.getElementById("search-btn")
 var cityInput=document.getElementById("city-input")
 var fivedayForcastEl= document.getElementById("fiveday-forcast")
+var searchHistory=document.getElementById("search-history")
 
 
-
-function searchCity(){
+function searchCity() {
     var cityName=cityInput.value
 
-    displayWeather(cityName)
+    if (cityName.toLowerCase().includes(cityInput.value.toLowerCase())) {
+        localStorage.setItem("city", JSON.stringify(cityName))
+        createCityBtn(cityName)   
+        displayWeather(cityName)
+    }
+}
 
+function createCityBtn(cityName) {
+    var li=document.createElement("li")
+    var cityBtn=document.createElement("button")
+    cityBtn.setAttribute("class", "btn btn-secondary w-100")
+    cityBtn.setAttribute("id", "search-history")
+    cityBtn.setAttribute("onclick", "searchCity()")
+    cityBtn.innerHTML=cityName
+    li.classList.add("list-group-item")
+    li.appendChild(cityBtn)
+    searchHistory.appendChild(li)
 }
 
 function displayWeather(cityName){
@@ -42,7 +57,7 @@ function displayWeather(cityName){
         //grab every 12pm for each day for 5 days
         var forecastArr=forecastData.list
 
-        for (let i = 4,j=1; i < forecastArr.length; i=i+8,j++) {
+        for (let i=4, j=1; i < forecastArr.length; i=i+8, j++) {
              console.log(forecastArr[i])
                var cardTitle=document.getElementById("card-title"+j)
                console.log("card-title"+j)
@@ -56,6 +71,5 @@ function displayWeather(cityName){
         }
     })
 }
-
 
 searchBtn.addEventListener("click", searchCity)
