@@ -8,10 +8,12 @@ var cityInput=document.getElementById("city-input")
 var fivedayForcastEl= document.getElementById("fiveday-forcast")
 
 
+
 function searchCity(){
     var cityName=cityInput.value
 
     displayWeather(cityName)
+
 }
 
 function displayWeather(cityName){
@@ -23,7 +25,10 @@ function displayWeather(cityName){
     })
     .then(function(currentData){
         console.log(currentData)
-        titleEl.innerHTML=currentData.name+dayjs.unix(currentData.dt).format("(MM/DD/YYYY)")+"<img src='https://openweathermap.org/img/wn/"+currentData.weather[0].icon+"@2x.png'>"
+        titleEl.innerHTML=currentData.name + dayjs.unix(currentData.dt).format(" (MM/DD/YYYY)")+ "<img src='https://openweathermap.org/img/wn/"+ currentData.weather[0].icon+"@2x.png'>"
+        tempEl.innerHTML="Temp: "+currentData.main.temp+" °F"
+        windEl.innerHTML="Wind: "+currentData.wind.speed+" MPH"
+        humidityEl.innerHTML="Humidity: "+currentData.main.humidity+" %"
     })
 
     var forecastUrl="https://api.openweathermap.org/data/2.5/forecast?q="+cityName+"&appid="+apiKey+"&units=imperial"
@@ -36,19 +41,19 @@ function displayWeather(cityName){
         console.log(forecastData)
         //grab every 12pm for each day for 5 days
         var forecastArr=forecastData.list
+
         for (let i = 4,j=1; i < forecastArr.length; i=i+8,j++) {
              console.log(forecastArr[i])
                var cardTitle=document.getElementById("card-title"+j)
                console.log("card-title"+j)
                cardTitle.textContent=dayjs.unix(forecastArr[i].dt).format("(MM/DD/YYYY)")
                var temp=document.getElementById("temp"+j)
-               temp.textContent=forecastArr[i].main.temp
+               temp.textContent="Temp: "+forecastArr[i].main.temp+" °F"
                var wind=document.getElementById("wind"+j)
-               wind.textContent=forecastArr[i].wind.speed
+               wind.textContent="Wind: "+forecastArr[i].wind.speed+" MPH"
                var humidity=document.getElementById("humidity"+j)
-               humidity.textContent=forecastArr[i].main.humidity
+               humidity.textContent="Humidity: "+forecastArr[i].main.humidity+" %"
         }
-
     })
 }
 
