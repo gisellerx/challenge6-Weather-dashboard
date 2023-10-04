@@ -1,44 +1,56 @@
-var apiKey = "3b104c2232eb817eda16cdfc92cbe1af"
-var titleEl = document.getElementById("title")
-var tempEl = document.getElementById("temp")
-var windEl = document.getElementById("wind")
-var humidityEl = document.getElementById("humidity")
-var searchBtn = document.getElementById("search-btn")
-var cityInput = document.getElementById("city-input")
+var apiKey="3b104c2232eb817eda16cdfc92cbe1af"
+var titleEl=document.getElementById("title")
+var tempEl=document.getElementById("temp")
+var windEl=document.getElementById("wind")
+var humidityEl=document.getElementById("humidity")
+var searchBtn=document.getElementById("search-btn")
+var cityInput=document.getElementById("city-input")
+var fivedayForcastEl= document.getElementById("fiveday-forcast")
 
-function searchCity(event) {
-    event.preventDefault()
-    var cityName = cityInput.value
+
+function searchCity(){
+    var cityName=cityInput.value
 
     displayWeather(cityName)
 }
 
-function displayWeather(cityName) {
-    var url = "https://api.openweathermap.org/data/2.5/weather?q="+cityName+"&appid="+ apiKey+"&units=imperial"
+function displayWeather(cityName){
+    var url="https://api.openweathermap.org/data/2.5/weather?q="+cityName+"&appid="+ apiKey+"&units=imperial"
 
     fetch(url)
-    .then(function(response) {
+    .then(function(response){
         return response.json()
     })
-    .then(function(currentData) {
+    .then(function(currentData){
         console.log(currentData)
+        titleEl.innerHTML=currentData.name+dayjs.unix(currentData.dt).format("(MM/DD/YYYY)")+"<img src='https://openweathermap.org/img/wn/"+currentData.weather[0].icon+"@2x.png'>"
     })
 
-    var forecastUrl = "https://api.openweathermap.org/data/2.5/forecast?q="+cityName+"&appid="+apiKey+"&units=imperial"
+    var forecastUrl="https://api.openweathermap.org/data/2.5/forecast?q="+cityName+"&appid="+apiKey+"&units=imperial"
 
     fetch(forecastUrl)
-    .then(function(response) {
+    .then(function(response){
         return response.json()
     })
-    .then(function(forecastData) {
+    .then(function(forecastData){
         console.log(forecastData)
-        // grab every 12pm for each day for 5 days
-        var forecastArray = forecastData.list
-        for (let i = 4; i < forecastArray.length; i=i+8) {  
-            console.log(forecastArray[i]) 
+        //grab every 12pm for each day for 5 days
+        var forecastArr=forecastData.list
+        for (let i = 4,j=1; i < forecastArr.length; i=i+8,j++) {
+             console.log(forecastArr[i])
+               var cardTitle=document.getElementById("card-title"+j)
+               console.log("card-title"+j)
+               cardTitle.textContent=dayjs.unix(forecastArr[i].dt).format("(MM/DD/YYYY)")
+               var temp=document.getElementById("temp"+j)
+               temp.textContent=forecastArr[i].main.temp
+               var wind=document.getElementById("wind"+j)
+               wind.textContent=forecastArr[i].wind.speed
+               var humidity=document.getElementById("humidity"+j)
+               humidity.textContent=forecastArr[i].main.humidity
         }
+
     })
 }
 
-searchBtn.addEventListener("click", searchCity)
 
+searchBtn.addEventListener("click", searchCity)
